@@ -3,6 +3,11 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import AddToCartButton from '@/components/AddToCartButton'
 
+interface ProductPageProps {
+  params: {
+    id: string;
+  };
+}
 
 async function getProduct(id: string) {
   try {
@@ -15,8 +20,8 @@ async function getProduct(id: string) {
   }
 }
 
-export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
+export default async function ProductPage({ params }: ProductPageProps) {
+  const { id } = params
   const product = await getProduct(id)
 
   if (!product) {

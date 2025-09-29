@@ -3,6 +3,12 @@ import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import ProductForm from '@/components/ProductForm'
 
+interface EditProductPageProps {
+  params: {
+    id: string;
+  };
+}
+
 async function getProduct(id: string) {
   return await prisma.product.findUnique({
     where: { id },
@@ -14,14 +20,14 @@ async function getCategories() {
   return await prisma.category.findMany()
 }
 
-export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditProductPage({ params }: EditProductPageProps) {
   const session = await auth()
 
   if (!session || session.user.role !== 'admin') {
     redirect('/auth/signin')
   }
 
-  const { id } = await params
+  const { id } = params
   const product = await getProduct(id)
   const categories = await getCategories()
 
